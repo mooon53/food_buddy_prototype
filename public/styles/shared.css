@@ -1,0 +1,24 @@
+@import url('./palette.css');
+
+.flexbox {
+    display: flex;
+    justify-content: center;
+}
+
+.centered-rows {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.centered-columns {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.centered-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
