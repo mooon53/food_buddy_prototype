@@ -1,0 +1,22 @@
+@import url('./shared.css');
+
+#navbar {
+  position: fixed;
+  height: 4em;
+  width:100vw;
+  bottom: 0px;
+
+  background-color: var(--white);
+
+  box-shadow: 0 -4px 4px rgba(0, 0, 0, 0.25);
+
+}
+
+#navbar img {
+    height:3.5em;
+    height:3.5em;
+}
+
+#navbar img.selected {
+    border-bottom: 5px solid black;
+}

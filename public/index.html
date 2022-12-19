@@ -7,13 +7,24 @@
     <title>FoodBuddy</title>
 
     <link rel="stylesheet" href="./styles/shared.css" type="text/css" />
+    <link rel="stylesheet" href="./styles/scanning-style.css" type="text/css" />
+
+    <link rel="stylesheet" href="./styles/navbar-style.css" type="text/css" />
 
     <script src="./scripts/get-camera.js" defer></script>
+
+    <script src="./scripts/inject-navbar.js" type="module"></script>
     
 </head>
 <body>
-    <div id="content">
+
+    <div id="camera-background" class="fullscreen center-content">
         <video autoplay="true" id="camera"></video>
     </div>
+
+    <div id="content" class="center-content">
+
+    </div>
+
 </body>
 </html>
