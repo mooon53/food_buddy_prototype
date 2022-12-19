@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Account</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        html body {
+            height: 100vh;
+            width: 100vw;
+            background: #FFD166;
+        }
+
+        nav {
+            padding: 10px;
+            background: white;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            height: 7vh;
+            width: 100vw;
+            position: absolute;
+            bottom: 0;
+        }
+
+        nav div {
+            height: 100%;
+            width: fit-content;
+        }
+
+        nav div img {
+            height: 100%;
+        }
+
+        #container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+
+        #accountInfoContainer {
+            display: flex;
+            flex-direction: row;
+            background: white;
+            border: 1px solid grey;
+            height: 15vh;
+        }
+
+        #infoContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        ul {
+            display: flex;
+            flex-direction: column;
+            align-content: space-around;
+        }
+
+        li {
+            background: #EF476F;
+            border: 1px solid white;
+            border-radius: 5px;
+            height: 12vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5em;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <div id="account">
+        <img src="icons/account.svg" alt="account"/>
+    </div>
+    <div id="camera">
+        <img src="icons/camera.svg" alt="camera"/>
+    </div>
+    <div id="list">
+        <img src="icons/list.svg" alt="list"/>
+    </div>
+</nav>
+<div id="container">
+    <div id="accountInfoContainer">
+        <div id="accountImage">
+            <img src="icons/account.svg" alt="Profile picture">
+        </div>
+        <div id="infoContainer">
+            <div id="accountName">Edward van der Wal</div>
+            <div id="emailAddress">edward.vanderwal@gmail.com</div>
+        </div>
+    </div>
+    <ul>
+        <li id="allergiesButton">Allergies</li>
+        <li id="dietButton">Diet</li>
+        <li id="settingsButton">Settings</li>
+    </ul>
+
+</div>
+</body>
+</html>
