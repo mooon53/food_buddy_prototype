@@ -5,7 +5,6 @@ def liveUPC():
     d = None
     t = None
     cap = cv2.VideoCapture(0)
-    #TODO: solution for endless camera capture
     while d == None or t==None:
         # read the frame from the camera
         _, pic = cap.read()
@@ -23,5 +22,3 @@ def liveUPC():
         if cv2.waitKey(1) == ord("q"):
             break
     return d, t
-
-d, t = liveUPC()
