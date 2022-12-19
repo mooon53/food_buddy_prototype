@@ -10,20 +10,28 @@
             font-family: Arial, sans-serif;
         }
 
-        html body {
+        html, body {
             height: 100vh;
             width: 100vw;
             background: #FFD166;
         }
 
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            justify-items: stretch;
+        }
+
         nav {
-            padding: 10px;
+            padding: 10px 0;
             background: white;
             display: flex;
             flex-direction: row;
             justify-content: space-around;
             height: 7vh;
-            width: 100vw;
+            width: 100%;
+            right: 0;
             position: absolute;
             bottom: 0;
         }
@@ -38,35 +46,43 @@
         }
 
         #container {
+            margin: 20px;
+            height: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: space-around;
+            justify-content: space-evenly;
+            justify-items: stretch;
         }
 
         #accountInfoContainer {
             display: flex;
             flex-direction: row;
+            gap: 10px;
             background: white;
             border: 1px solid grey;
+            border-radius: 15px;
             height: 15vh;
+            padding: 10px;
         }
 
         #infoContainer {
             display: flex;
             flex-direction: column;
             align-items: center;
+            font-size: 2em;
         }
 
         ul {
             display: flex;
             flex-direction: column;
-            align-content: space-around;
+            justify-content: space-evenly;
+            height: 69vh;
         }
 
         li {
             background: #EF476F;
             border: 1px solid white;
-            border-radius: 5px;
+            border-radius: 15px;
             height: 12vh;
             display: flex;
             align-items: center;
@@ -75,25 +91,18 @@
             color: white;
             font-weight: bold;
         }
+
+        #accountImage {
+            height: 100%;
+            width: auto;
+        }
     </style>
 </head>
 <body>
-<nav>
-    <div id="account">
-        <img src="icons/account.svg" alt="account"/>
-    </div>
-    <div id="camera">
-        <img src="icons/camera.svg" alt="camera"/>
-    </div>
-    <div id="list">
-        <img src="icons/list.svg" alt="list"/>
-    </div>
-</nav>
+
 <div id="container">
     <div id="accountInfoContainer">
-        <div id="accountImage">
-            <img src="icons/account.svg" alt="Profile picture">
-        </div>
+        <img id="accountImage" src="icons/account.svg" alt="Profile picture">
         <div id="infoContainer">
             <div id="accountName">Edward van der Wal</div>
             <div id="emailAddress">edward.vanderwal@gmail.com</div>
@@ -106,5 +115,16 @@
     </ul>
 
 </div>
+<nav>
+    <div id="account">
+        <img src="icons/account.svg" alt="account"/>
+    </div>
+    <div id="camera">
+        <img src="icons/camera.svg" alt="camera"/>
+    </div>
+    <div id="list">
+        <img src="icons/list.svg" alt="list"/>
+    </div>
+</nav>
 </body>
 </html>
