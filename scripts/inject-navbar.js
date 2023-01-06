@@ -2,16 +2,16 @@ import './lib/jquery.js';
 
 const CONFIG = [
     {
-        imgLink: '/images/icons/user-icon.png',
+        imgLink: '/images/icons/account.svg',
         pageLink: '/account.html'
     },
     {
-        imgLink: '/images/icons/camera-icon.png',
+        imgLink: '/images/icons/scan-barcode.svg',
         pageLink: '/' // = index.html
     },
     {
-        imgLink: '/images/icons/receipt-icon.png',
-        pageLink: '/favourites-list.html'
+        imgLink: '/images/icons/list.svg',
+        pageLink: '/my-list.html'
     }
 ];
 

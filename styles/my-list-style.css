@@ -1,0 +1,13 @@
+body {
+    background-color: var(--blue);
+}
+
+div#products-list {
+    width: 90%;
+    gap: 25px;
+
+    max-height: 75vh;
+    overflow-y: scroll;
+
+    justify-content: flex-start;
+}
