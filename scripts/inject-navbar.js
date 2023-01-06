@@ -16,6 +16,8 @@ const CONFIG = [
 ];
 
 window.addEventListener('DOMContentLoaded', () => {
+    $(document.head).append(`<link rel="stylesheet" href="./styles/navbar-style.css" type="text/css" />`);
+
     const navbar = $('<div id="navbar" class="center-content centered-columns space-evenly"></div>').appendTo(document.body);
 
     CONFIG.forEach(button => {

@@ -1,4 +1,5 @@
 @import url('../palette.css');
+@import url('../fonts.css');
 
 product-entry {
     box-sizing: border-box;
@@ -7,7 +8,7 @@ product-entry {
     width:100%;
     height:fit-content;
 
-    padding:5px 15px 5px 15px;
+    padding:5px 20px 5px 15px;
     border-radius: 10px;
 
     display: flex;
@@ -28,4 +29,6 @@ product-entry > img {
 
 product-entry > h2 {
     font-size: 2em;
+    font-family: Inter;
+    font-style: italic;
 }
