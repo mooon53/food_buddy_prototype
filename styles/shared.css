@@ -4,6 +4,8 @@
 body {
     padding:0px;
     margin:0px;
+
+    font-family: Inter;
 }
 
 div#content {
@@ -18,13 +20,13 @@ div#content {
 
 .centered-rows {
     display: flex;
-    justify-content: center;
+    align-items: center;
     flex-direction: column;
 }
 
 .centered-columns {
     display: flex;
-    justify-content: center;
+    align-items: center;
     flex-direction: row;
 }
 

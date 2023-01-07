@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodBuddy</title>
+
+    <link rel="stylesheet" href="./styles/shared.css" type="text/css" />
+    <link rel="stylesheet" href="./styles/scanned-style.css" type="text/css" />
+
+    <script src="./scripts/inject-navbar.js" type="module"></script>
+    
+</head>
+<body class="safe">
+
+    <div id="content" class="centered-rows">
+        <div id="general-info" class="section">
+            <h1 id="product-name">Product Name</h1>
+            <h2 id="product-weight">(??? grams)</h2>
+        </div>
+
+        <div id="nutri-score-section" class="section centered-columns">
+            <h1 class="header">Nutri-Score</h1>
+            <div class="health-indicator"><h2>C</h2></div>
+        </div>
+
+        <div class="section">
+            <h1 class="header">Nutrients</h1>
+            <div id="nutrient-info">
+                <div class="centered-columns nutrient-category">
+                    <h2>• Sugar</h2>
+                    <div class="health-indicator"></div>
+                </div>
+                <div class="centered-columns nutrient-category">
+                    <h2>• Fat</h2>
+                    <div class="health-indicator"></div>
+                </div>
+                <div class="centered-columns nutrient-category">
+                    <h2>• Saturated Fat</h2>
+                    <div class="health-indicator"></div>
+                </div>
+                <div class="centered-columns nutrient-category">
+                    <h2>• Salt</h2>
+                    <div class="health-indicator"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h1 class="header">Ingredients</h1>
+            <div id="ingredients" class="centered-rows">
+                <div class="ingredient centered-columns">
+                    <h2>• Apple</h2>
+                    <h2>95%</h2>
+                </div>
+                <div class="ingredient centered-columns">
+                    <h2>• Cane sugar</h2>
+                    <h2>4%</h2>
+                </div>
+                <div class="ingredient centered-columns">
+                    <h2>• Wheat flour</h2>
+                    <h2>1%</h2>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+</body>
+</html>
