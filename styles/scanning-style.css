@@ -1,4 +1,9 @@
-#camera {
-    height:100vh;
-    object-position: 50% 50%;
+#scanner-container {
+    position: fixed;
+}
+
+#scanner-container > video {
+    object-position: center center;
+    object-fit:fill;
+    height:calc(100vh - 4em);
 }

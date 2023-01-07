@@ -10,20 +10,20 @@
     <link rel="stylesheet" href="./styles/scanning-style.css" type="text/css" />
 
     <link rel="stylesheet" href="./styles/navbar-style.css" type="text/css" />
+    
+    <!-- Barcode scanning library -->
+    <script src="https://cdn.rawgit.com/serratus/quaggaJS/0420d5e0/dist/quagga.min.js"></script>
 
-    <script src="./scripts/get-camera.js" defer></script>
+    <script src="./scripts/barcode-detection.js" type="module"></script>
 
     <script src="./scripts/inject-navbar.js" type="module"></script>
     
 </head>
 <body>
 
-    <div id="camera-background" class="fullscreen center-content">
-        <video autoplay="true" id="camera"></video>
-    </div>
-
+    <div id="scanner-container" class="center-content"></div>
+    
     <div id="content" class="center-content">
-
     </div>
 
 </body>

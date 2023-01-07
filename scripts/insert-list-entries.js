@@ -1,4 +1,4 @@
-import './lib/jquery.js';
+import './lib/JQuery.js';
 import OpenFoodFactsAPI from './OpenFoodFactsAPI.js';
 import ProductEntry from './elements/product-entry.js';
 

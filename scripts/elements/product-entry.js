@@ -1,5 +1,3 @@
-import '../lib/jquery.js';
-
 document.addEventListener('DOMContentLoaded', function() {
     $(document.head).append(`<link rel="stylesheet" href="/styles/elements/product-entry-style.css" type="text/css" />`);
 });
