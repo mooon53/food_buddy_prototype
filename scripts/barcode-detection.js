@@ -1,6 +1,8 @@
 import OpenFoodFactsAPI from './OpenFoodFactsAPI.js';
 import './lib/JQuery.js';
 
+import USER_SETTINGS, { respectsAllergies, respectsDiet } from './user-settings.js';
+
 var scanning = false;
 var product = undefined;
 
@@ -44,7 +46,7 @@ Quagga.onDetected(result => {
         OpenFoodFactsAPI.search(code)
         .then(res => { // new product found
             product = res;
-            setClickBoxCode(code,true);
+            setClickBoxCode(code, respectsAllergies(res));
         })
         .catch(err => { /* Assume invalid scan, do nothing else */ })
         .finally(() => searchingBarcode = false);

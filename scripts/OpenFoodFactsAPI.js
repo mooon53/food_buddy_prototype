@@ -35,7 +35,7 @@ export default class OpenFoodFactsAPI {
 
 }
 
-class ProductInfo {
+export class ProductInfo {
     
     #id;
     get id() { return this.#id; }
@@ -79,19 +79,17 @@ class ProductInfo {
     }
 
     static fromJSONResponse(res) {
-        console.log(res);
-
         return new ProductInfo(
             res.code,
             OpenFoodFactsAPI.LANGUAGE_PREFERENCE.reduce( // get name in most preferred language
                 (val, lang) => val ?? res['product_name_'+lang],
                 undefined
-            ),
-            res.brands,
-            res.quantity,
-            res.image_front_url,
-            res.food_groups_tags,
-            res.allergens_tags,
+            ) ?? 'Unknown product',
+            res.brands ?? '',
+            res.quantity ?? '??? grams',
+            res.image_front_url ?? '/images.icons/account.svg',
+            res.food_groups_tags ?? [],
+            res.allergens_tags ?? [],
             (res.ingredients ?? [ProductIngredient.UNKNOWN_INGREDIENT]).map(ProductIngredient.fromJSONResponse),
             NutritionalInfo.fromJSONResponse(res)
         );
@@ -99,7 +97,7 @@ class ProductInfo {
 
 }
 
-class ProductIngredient {
+export class ProductIngredient {
 
     static get UNKNOWN_INGREDIENT() {
         return {
@@ -131,6 +129,7 @@ class ProductIngredient {
     }
 
     static fromJSONResponse(res) {
+        console.log(res.id);
         const name = res.id.substring(res.id.indexOf(':')+1).replaceAll('-', ' ');
 
         return new ProductIngredient(
@@ -145,7 +144,7 @@ class ProductIngredient {
 }
 
 
-class NutritionalInfo {
+export class NutritionalInfo {
 
     #nutriscore;
     get nutriscore() { return this.#nutriscore; }

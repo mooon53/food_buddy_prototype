@@ -1,5 +1,6 @@
 import './lib/JQuery.js';
 import OpenFoodFactsAPI from './OpenFoodFactsAPI.js';
+import USER_SETTINGS, { respectsAllergies, respectsDiet } from './user-settings.js';
 
 const NUTRISCORE_MAPPING = {
     '?': 'unknown',
@@ -15,6 +16,7 @@ const PRODUCT_ID = new URLSearchParams(window.location.search).get('code');[]
 window.addEventListener('DOMContentLoaded', () => {
     OpenFoodFactsAPI.search(PRODUCT_ID ?? '8718906821934')
     .then(res => { // insert product details
+        $(document.body).addClass(respectsAllergies(res) ? 'safe' : 'unsafe');
 
         // general info
         $('#product-name').text(res.name.includes(res.brands) ? res.name : `${res.brands} ${res.name}`);
