@@ -10,14 +10,14 @@ const NUTRISCORE_MAPPING = {
     'E': 'high'
 }
 
-const PRODUCT_ID = '8712800035657';
+const PRODUCT_ID = new URLSearchParams(window.location.search).get('code');[]
 
 window.addEventListener('DOMContentLoaded', () => {
-    OpenFoodFactsAPI.search(PRODUCT_ID)
+    OpenFoodFactsAPI.search(PRODUCT_ID ?? '8718906821934')
     .then(res => { // insert product details
 
         // general info
-        $('#product-name').text(res.name);
+        $('#product-name').text(res.name.includes(res.brands) ? res.name : `${res.brands} ${res.name}`);
         $('#product-weight').text(`(${res.quantity})`);
 
         // nutri-score
@@ -35,7 +35,7 @@ window.addEventListener('DOMContentLoaded', () => {
             $('#ingredients').append(`
                 <div class="ingredient centered-columns">
                     <h2>• ${ingredient.name}</h2>
-                    <h2>${ingredient.percentage.toFixed(0)}%</h2>
+                    <h2>${ingredient.percentage >= 0.1 ? ingredient.percentage.toFixed(1) : '<0.1'}%</h2>
                 </div>
             `);
         }

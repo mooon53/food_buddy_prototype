@@ -1,3 +1,24 @@
+@import url('./palette.css');
+
+#content {
+    position: absolute;
+
+    width:100vw;
+    height: calc(100vh - 7.5em) !important;
+
+    justify-content: center;
+}
+
+#content.safe {
+    box-shadow: inset 0px 0px 1em .125em var(--green);
+    transition: 250ms ease-in;
+}
+
+#content.unsafe {
+    box-shadow: inset 0px 0px 1em .125em var(--red);
+    transition: 250ms ease-in;
+}
+
 #scanner-container {
     position: fixed;
 }
@@ -6,4 +27,28 @@
     object-position: center center;
     object-fit:fill;
     height:calc(100vh - 4em);
+}
+
+#click-box {
+    background-color: rgba(0,0,0,0.5);
+    border: .2em solid lightgray;
+
+    width: 10em;
+    height: 7.29em;
+
+    border-radius: 1em;
+}
+
+#click-box.safe {
+    border: .2em solid var(--green);
+    box-shadow: 0px 0px 1em .125em var(--green);
+
+    transition: 250ms ease-in;
+}
+
+#click-box.unsafe {
+    border: .2em solid var(--red);
+    box-shadow: 0px 0px 1em .125em var(--red);
+
+    transition: 250ms ease-in;
 }

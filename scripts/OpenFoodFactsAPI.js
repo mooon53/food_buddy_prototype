@@ -41,6 +41,8 @@ class ProductInfo {
     get id() { return this.#id; }
     #name;
     get name() { return this.#name; }
+    #brands;
+    get brands() { return this.#brands; }
     #quantity;
     get quantity() { return this.#quantity; }
     #imageURL;
@@ -59,8 +61,9 @@ class ProductInfo {
     get isVegan() { return this.ingredients.every(i => i.isVegan); }
     get isVegetarian() { return this.ingredients.every(i => i.isVegetarian); }
 
-    constructor(id, name, quantity, imageURL, categories, allergens, ingredients, nutritionalInfo) {
+    constructor(id, name, brands, quantity, imageURL, categories, allergens, ingredients, nutritionalInfo) {
         this.#id = id;
+        this.#brands = brands;
         this.#name = name;
         this.#quantity = quantity;
         this.#imageURL = imageURL
@@ -68,7 +71,7 @@ class ProductInfo {
         this.#allergens = allergens;
         this.#ingredients = ingredients;
 
-        this.#ingredients.sort((a,b) => a.name.localeCompare(b.name)); // sort ingredient alphabetically
+        this.#ingredients.sort((a,b) => b.percentage - a.percentage); // sort ingredient by percentage (high -> low)
         Object.freeze(this.#ingredients);
         
         this.#nutritionalInfo = nutritionalInfo;
@@ -76,12 +79,15 @@ class ProductInfo {
     }
 
     static fromJSONResponse(res) {
+        console.log(res);
+
         return new ProductInfo(
             res.code,
             OpenFoodFactsAPI.LANGUAGE_PREFERENCE.reduce( // get name in most preferred language
                 (val, lang) => val ?? res['product_name_'+lang],
                 undefined
             ),
+            res.brands,
             res.quantity,
             res.image_front_url,
             res.food_groups_tags,

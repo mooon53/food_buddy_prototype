@@ -1,6 +1,8 @@
-var scanning = false;
-var previousCode = undefined;
 import OpenFoodFactsAPI from './OpenFoodFactsAPI.js';
+import './lib/JQuery.js';
+
+var scanning = false;
+var product = undefined;
 
 function startScanner() {
     Quagga.init({
@@ -15,6 +17,7 @@ function startScanner() {
             },
         },
         decoder: { readers: [ "ean_reader", "ean_8_reader" ] },
+        frequency: 5 // get camera at 5 fps
 
     }, err => {
         if (err) console.log(err);
@@ -29,15 +32,49 @@ function startScanner() {
     });
 
 
-    Quagga.onDetected(result => {
-        const code = result.codeResult.code;
-        if (code !== previousCode) {
-            previousCode = code;
-            OpenFoodFactsAPI.search(code)
-            .then(res => alert(res.name))
-            .catch(err => alert(err));
-        }
-    });
+}
+
+var searchingBarcode = false; // whether the API is busy searching a code
+
+Quagga.onDetected(result => {
+    const code = result.codeResult.code;
+    if (!searchingBarcode && (product === undefined || code !== product.id)) {
+        searchingBarcode = true; // only call API once at a time
+
+        OpenFoodFactsAPI.search(code)
+        .then(res => { // new product found
+            product = res;
+            setClickBoxCode(code,true);
+        })
+        .catch(err => { /* Assume invalid scan, do nothing else */ })
+        .finally(() => searchingBarcode = false);
+    }
+});
+
+function setClickBoxCode(code, safe) {
+    $('#click-box').removeClass('safe');
+    $('#click-box').removeClass('unsafe');
+    $('#content').removeClass('unsafe');
+    $('#content').removeClass('unsafe');
+
+    // safe may be undefined
+    if (safe === true) {
+        $('#click-box').addClass('safe');
+        $('#content').addClass('safe');
+    }
+    else if (safe === false) {
+        $('#click-box').addClass('unsafe');
+        $('#content').addClass('unsafe');
+    }
+
+    $('#click-box').attr('code', code);
+
+}
+
+window.gotoScanned = function() {
+    const code = $('#click-box').attr('code');
+
+    if (code) window.location.assign(`/scanned.html?code=${code}`); // redirect
 }
 
 window.addEventListener('DOMContentLoaded', startScanner);

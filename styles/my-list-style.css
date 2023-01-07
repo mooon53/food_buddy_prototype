@@ -3,10 +3,11 @@ body {
 }
 
 div#products-list {
-    width: 90%;
+    width: 90vw;
     gap: 25px;
 
     max-height: 75vh;
+    padding-bottom: 5em;
     overflow-y: scroll;
 
     justify-content: flex-start;
