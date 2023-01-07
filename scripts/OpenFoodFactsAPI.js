@@ -11,6 +11,9 @@ export default class OpenFoodFactsAPI {
      * (and rejects with a reason why) 
      */
     static search(id) {
+        if (typeof id !== 'string') id = id.toString();
+        id = id.trim();
+
         return new Promise((resolve, reject) => {
             const req = new XMLHttpRequest();
 
@@ -38,6 +41,8 @@ class ProductInfo {
     get id() { return this.#id; }
     #name;
     get name() { return this.#name; }
+    #quantity;
+    get quantity() { return this.#quantity; }
     #imageURL;
     get imageURL() { return this.#imageURL }
     #categories;
@@ -45,31 +50,43 @@ class ProductInfo {
     #allergens;
     get allergens() { return this.#allergens; }
     #ingredients;
+    /** @returns {Array<ProductIngredient>} */
     get ingredients() { return this.#ingredients; }
     #nutritionalInfo;
+    /** @returns {NutritionalInfo} */
     get nutritionalInfo() { return this.#nutritionalInfo; }
 
-    constructor(id, name, imageURL, categories, allergens, ingredients, nutritionalInfo) {
+    get isVegan() { return this.ingredients.every(i => i.isVegan); }
+    get isVegetarian() { return this.ingredients.every(i => i.isVegetarian); }
+
+    constructor(id, name, quantity, imageURL, categories, allergens, ingredients, nutritionalInfo) {
         this.#id = id;
         this.#name = name;
+        this.#quantity = quantity;
         this.#imageURL = imageURL
         this.#categories = categories;
         this.#allergens = allergens;
         this.#ingredients = ingredients;
+
+        this.#ingredients.sort((a,b) => a.name.localeCompare(b.name)); // sort ingredient alphabetically
+        Object.freeze(this.#ingredients);
+        
         this.#nutritionalInfo = nutritionalInfo;
+        Object.freeze(this.#nutritionalInfo);
     }
 
     static fromJSONResponse(res) {
         return new ProductInfo(
             res.code,
-            OpenFoodFactsAPI.LANGUAGE_PREFERENCE.reduce(
+            OpenFoodFactsAPI.LANGUAGE_PREFERENCE.reduce( // get name in most preferred language
                 (val, lang) => val ?? res['product_name_'+lang],
                 undefined
             ),
+            res.quantity,
             res.image_front_url,
             res.food_groups_tags,
             res.allergens_tags,
-            res.ingredients.map(ProductIngredient.fromJSONResponse),
+            (res.ingredients ?? [ProductIngredient.UNKNOWN_INGREDIENT]).map(ProductIngredient.fromJSONResponse),
             NutritionalInfo.fromJSONResponse(res)
         );
     }
@@ -77,6 +94,16 @@ class ProductInfo {
 }
 
 class ProductIngredient {
+
+    static get UNKNOWN_INGREDIENT() {
+        return {
+            id: 'unknown',
+            name: 'Unknown',
+            percent: 100,
+            vegan:false,
+            vegetarian: false
+        };
+    }
 
     #id;
     get id() { return this.#id; }
@@ -98,9 +125,11 @@ class ProductIngredient {
     }
 
     static fromJSONResponse(res) {
+        const name = res.id.substring(res.id.indexOf(':')+1).replaceAll('-', ' ');
+
         return new ProductIngredient(
             res.id,
-            res.text,
+            name.charAt(0).toLocaleUpperCase() + name.substring(1),
             res.percent ?? res.percent_estimate ?? res.percent_max ?? res.percent_min,
             res.vegan === 'yes',
             res.vegetarian === "yes"
@@ -133,11 +162,11 @@ class NutritionalInfo {
 
     static fromJSONResponse(res) {
         return new NutritionalInfo(
-            res.nutriscore_grade,
-            res.nutrient_levels.fat,
-            res.nutrient_levels.salt,
-            res.nutrient_levels.saturatedFat,
-            res.nutrient_levels.sugar
+            (res.nutriscore_grade ?? '?').toLocaleUpperCase(),
+            res.nutrient_levels.fat ?? 'unknown',
+            res.nutrient_levels.salt ?? 'unknown',
+            res.nutrient_levels['saturated-fat']  ?? 'unknown',
+            res.nutrient_levels.sugars ?? 'unknown'
         );
     }
 

@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="./styles/shared.css" type="text/css" />
     <link rel="stylesheet" href="./styles/scanned-style.css" type="text/css" />
 
+    <script src="./scripts/insert-product-details.js" type="module"></script>
+
     <script src="./scripts/inject-navbar.js" type="module"></script>
     
 </head>
@@ -22,7 +24,7 @@
 
         <div id="nutri-score-section" class="section centered-columns">
             <h1 class="header">Nutri-Score</h1>
-            <div class="health-indicator"><h2>C</h2></div>
+            <div id="product-nutri-score" class="health-indicator"><h2>C</h2></div>
         </div>
 
         <div class="section">
@@ -30,19 +32,19 @@
             <div id="nutrient-info">
                 <div class="centered-columns nutrient-category">
                     <h2>• Sugar</h2>
-                    <div class="health-indicator"></div>
+                    <div id="product-sugar-content" class="health-indicator"></div>
                 </div>
                 <div class="centered-columns nutrient-category">
                     <h2>• Fat</h2>
-                    <div class="health-indicator"></div>
+                    <div id="product-fat-content" class="health-indicator"></div>
                 </div>
                 <div class="centered-columns nutrient-category">
                     <h2>• Saturated Fat</h2>
-                    <div class="health-indicator"></div>
+                    <div id="product-saturated-fat-content" class="health-indicator"></div>
                 </div>
                 <div class="centered-columns nutrient-category">
                     <h2>• Salt</h2>
-                    <div class="health-indicator"></div>
+                    <div id="product-salt-content" class="health-indicator"></div>
                 </div>
             </div>
         </div>
@@ -50,18 +52,6 @@
         <div class="section">
             <h1 class="header">Ingredients</h1>
             <div id="ingredients" class="centered-rows">
-                <div class="ingredient centered-columns">
-                    <h2>• Apple</h2>
-                    <h2>95%</h2>
-                </div>
-                <div class="ingredient centered-columns">
-                    <h2>• Cane sugar</h2>
-                    <h2>4%</h2>
-                </div>
-                <div class="ingredient centered-columns">
-                    <h2>• Wheat flour</h2>
-                    <h2>1%</h2>
-                </div>
             </div>
         </div>
         

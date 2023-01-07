@@ -57,12 +57,13 @@ div.nutrient-category > h2 {
 div.ingredient {
     width:100%;
     justify-content: space-between;
-    font-size: 1.25em;
     margin:8px 0 8px 0;
 }
 
 div.ingredient > * {
     margin:0;
+    font-size: 1.75em;
+    font-weight: 600;
 }
 
 div.health-indicator {
@@ -75,6 +76,13 @@ div.health-indicator {
     align-items: center;
     justify-content: center;
 }
+
+div.health-indicator.unknown { background-color: #949494; }
+div.health-indicator.low { background-color: #00823f; }
+div.health-indicator.moderate-low { background-color: #86bc2b; }
+div.health-indicator.moderate { background-color: #fecc00; }
+div.health-indicator.moderate-high { background-color: #ee8200; }
+div.health-indicator.high { background-color: #e73c09; }
 
 div.health-indicator > * {    
     font-size: 2em;
