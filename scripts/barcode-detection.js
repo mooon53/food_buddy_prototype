@@ -76,6 +76,8 @@ function setClickBoxCode(code, safe) {
     $('#scan-status').removeClass('safe');
     $('#scan-status').removeClass('unsafe');
 
+    $('#scan-status').text('Searching' + '.'.repeat(dots));
+
     // safe may be undefined
     if (safe === true) {
         $('#click-box').addClass('safe');
