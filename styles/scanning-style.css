@@ -29,9 +29,36 @@
     height:calc(100vh - 4em);
 }
 
+#scan-status {
+    position: absolute;
+    width:50vw;
+    left:25vw;
+    top:12.5vh;
+
+    box-sizing: border-box;
+    padding:.5em;
+    border-radius: 10em;
+    text-align: center;
+
+    font-weight: 800;
+
+    background-color: var(--white);
+    color: black;
+}
+
+#scan-status.safe {
+    background-color: var(--green) !important;
+    color: var(--white) !important;
+}
+
+#scan-status.unsafe {
+    background-color: var(--red) !important;
+    color: var(--white) !important;
+}
+
 #click-box {
     background-color: rgba(0,0,0,0.5);
-    border: .2em solid lightgray;
+    border: .2em solid var(--white);
 
     width: 10em;
     height: 7.29em;

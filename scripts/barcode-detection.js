@@ -56,17 +56,28 @@ Quagga.onDetected(result => {
 function setClickBoxCode(code, safe) {
     $('#click-box').removeClass('safe');
     $('#click-box').removeClass('unsafe');
+
+    $('#content').removeClass('safe');
     $('#content').removeClass('unsafe');
-    $('#content').removeClass('unsafe');
+
+    $('#scan-status').removeClass('safe');
+    $('#scan-status').removeClass('unsafe');
+    $('#scan-status').text('Scanning');
 
     // safe may be undefined
     if (safe === true) {
         $('#click-box').addClass('safe');
         $('#content').addClass('safe');
+
+        $('#scan-status').addClass('safe');
+        $('#scan-status').text('Safe');
     }
     else if (safe === false) {
         $('#click-box').addClass('unsafe');
         $('#content').addClass('unsafe');
+
+        $('#scan-status').addClass('unsafe');
+        $('#scan-status').text('Warning');
     }
 
     $('#click-box').attr('code', code);
