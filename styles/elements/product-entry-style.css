@@ -19,7 +19,8 @@ product-entry {
 }
 
 product-entry > img {
-    object-fit:cover;
+    object-fit:contain;
+    object-position: 50% 50%;
 
     width:6em;
     height:6em;
@@ -31,4 +32,9 @@ product-entry > h2 {
     font-size: 2em;
     font-family: Inter;
     font-style: italic;
+}
+
+product-entry > h2 > a {
+    text-decoration: none;
+    color: black;
 }

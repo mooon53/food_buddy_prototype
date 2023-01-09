@@ -7,7 +7,7 @@ export default class ProductEntry extends HTMLElement {
     #product;
 
     /**
-     * 
+     * Creates a new ProductEntry element.
      * @param {ProductInfo} product 
      */
     constructor(product) {
@@ -17,7 +17,7 @@ export default class ProductEntry extends HTMLElement {
 
         this.innerHTML = `
             <img src="${product.imageURL}" alt="${product.name}">
-            <h2>${product.name}</h2>
+            <h2><a href="/scanned.html?code=${product.id}">${product.name}</a></h2>
         `;
     }
 

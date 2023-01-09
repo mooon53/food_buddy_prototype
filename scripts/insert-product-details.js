@@ -11,7 +11,7 @@ const NUTRISCORE_MAPPING = {
     'E': 'high'
 }
 
-const PRODUCT_ID = new URLSearchParams(window.location.search).get('code');[]
+const PRODUCT_ID = new URLSearchParams(window.location.search).get('code');
 
 window.addEventListener('DOMContentLoaded', () => {
     OpenFoodFactsAPI.search(PRODUCT_ID ?? '8718906821934')

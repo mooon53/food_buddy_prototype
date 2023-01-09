@@ -129,13 +129,12 @@ export class ProductIngredient {
     }
 
     static fromJSONResponse(res) {
-        console.log(res.id);
         const name = res.id.substring(res.id.indexOf(':')+1).replaceAll('-', ' ');
 
         return new ProductIngredient(
             res.id,
             name.charAt(0).toLocaleUpperCase() + name.substring(1),
-            res.percent ?? res.percent_estimate ?? res.percent_max ?? res.percent_min,
+            res.percent ?? res.percent_estimate ?? res.percent_max ?? res.percent_min ?? 0,
             res.vegan === 'yes',
             res.vegetarian === "yes"
         );
