@@ -6,6 +6,10 @@ import USER_SETTINGS, { respectsAllergies, respectsDiet } from './user-settings.
 var scanning = false;
 var product = undefined;
 
+// product code is discarded after not seeing a barcode for 5 seconds
+const TIME_UNTIL_UNSELECT = 5000;
+var unselectTimeout = undefined;
+
 function startScanner() {
     Quagga.init({
         inputStream: {
@@ -39,12 +43,21 @@ function startScanner() {
 var searchingBarcode = false; // whether the API is busy searching a code
 
 Quagga.onDetected(result => {
+    // reset timeout
+    clearTimeout(unselectTimeout);
+    unselectTimeout = setTimeout(() => {
+        setClickBoxCode(undefined, undefined);
+        product = undefined;
+    }, TIME_UNTIL_UNSELECT);
+    
     const code = result.codeResult.code;
+
     if (!searchingBarcode && (product === undefined || code !== product.id)) {
         searchingBarcode = true; // only call API once at a time
 
         OpenFoodFactsAPI.search(code)
         .then(res => { // new product found
+
             product = res;
             setClickBoxCode(code, respectsAllergies(res));
         })
@@ -62,7 +75,6 @@ function setClickBoxCode(code, safe) {
 
     $('#scan-status').removeClass('safe');
     $('#scan-status').removeClass('unsafe');
-    $('#scan-status').text('Scanning');
 
     // safe may be undefined
     if (safe === true) {
@@ -80,14 +92,22 @@ function setClickBoxCode(code, safe) {
         $('#scan-status').text('Warning');
     }
 
-    $('#click-box').attr('code', code);
+    if (code) $('#click-box').attr('code', code);
+    else $('#click-box').removeAttr('code');
 
 }
 
 window.gotoScanned = function() {
     const code = $('#click-box').attr('code');
-
     if (code) window.location.assign(`/scanned.html?code=${code}`); // redirect
 }
 
 window.addEventListener('DOMContentLoaded', startScanner);
+
+// the dots after "Scanning"
+let dots = 0;
+setInterval(() => {
+    if (product === undefined) $('#scan-status').text('Searching' + '.'.repeat(dots));
+    dots ++;
+    dots = dots%4;
+}, 1000);
