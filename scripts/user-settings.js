@@ -1,3 +1,5 @@
+import LocallyStoredSet from './LocallyStoredSet.js';
+
 var USER_SETTINGS = {
     personalInfo: {
         name: 'Edward van der Wal',
@@ -9,10 +11,7 @@ var USER_SETTINGS = {
         isVegetarian: false,
         isVegan: false
     },
-    allergies: [ // list of banned allergen IDs
-        // 'en:peanuts',
-        'en:gluten'
-    ]
+    allergies: new LocallyStoredSet('saved-allergies').all // list of banned allergen IDs
 };
 Object.seal(USER_SETTINGS);
 

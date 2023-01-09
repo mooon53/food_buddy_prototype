@@ -1,8 +1,10 @@
 import './lib/JQuery.js';
-import SavedProducts from "./saved-products.js";
+import LocallyStoredSet from './LocallyStoredSet.js';
+
+const SAVED_PRODUCTS = new LocallyStoredSet('saved-products');
 
 const PRODUCT_ID = new URLSearchParams(window.location.search).get('code');
-var saved = SavedProducts.includes(PRODUCT_ID);
+var saved = SAVED_PRODUCTS.includes(PRODUCT_ID);
 
 function setButtonSrc() {
     if (saved) $('#save-button').attr('src', './images/icons/heart-filled.svg');
@@ -12,6 +14,6 @@ function setButtonSrc() {
 window.addEventListener('DOMContentLoaded', setButtonSrc);
 
 window.toggleSaved = function() {
-    saved = SavedProducts.toggle(PRODUCT_ID);
+    saved = SAVED_PRODUCTS.toggle(PRODUCT_ID);
     setButtonSrc();
 }

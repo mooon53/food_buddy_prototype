@@ -1,3 +1,5 @@
+import { respectsAllergies } from "../user-settings.js";
+
 document.addEventListener('DOMContentLoaded', function() {
     $(document.head).append(`<link rel="stylesheet" href="/styles/elements/product-entry-style.css" type="text/css" />`);
 });
@@ -19,6 +21,8 @@ export default class ProductEntry extends HTMLElement {
             <img src="${product.imageURL}" alt="${product.name}">
             <h2><a href="/scanned.html?code=${product.id}">${product.name}</a></h2>
         `;
+
+        this.classList.add(respectsAllergies(product) ? 'safe' : 'unsafe');
     }
 
 }
