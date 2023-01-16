@@ -6,7 +6,8 @@ const SAVED_ALLERGIES = new LocallyStoredSet('saved-allergies');
 const POSSIBLE_ALLERGIES = [
     'en:peanuts',
     'en:soy',
-    'en:dairy'
+    'en:milk',
+    'en:gluten',
 ];
 
 POSSIBLE_ALLERGIES.sort((a,b) => a.localeCompare(b));

@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="./styles/shared.css" type="text/css" />
     <link rel="stylesheet" href="./styles/scanned-style.css" type="text/css" />
 
+    <script src="./scripts/elements/product-entry.js" type="module"></script>
+
     <script src="./scripts/insert-product-details.js" type="module"></script>
     <script src="./scripts/saved-product-button.js" type="module"></script>
 
@@ -24,6 +26,13 @@
         <div id="general-info" class="section">
             <h1 id="product-name">Product Name</h1>
             <h2 id="product-weight">(??? grams)</h2>
+        </div>
+
+        <div class="section">
+            <h1 class="header">Allergens</h1>
+            <div id="allergens" class="centered-rows">
+                <!-- allergens end up here -->
+            </div>
         </div>
 
         <div id="nutri-score-section" class="section centered-columns">
@@ -57,6 +66,13 @@
             <h1 class="header">Ingredients</h1>
             <div id="ingredients" class="centered-rows">
                 <!-- ingredients end up here -->
+            </div>
+        </div>
+
+        <div class="section">
+            <h1 class="header">Recommendations</h1>
+            <div id="recommendations" class="centered-rows">
+                <!-- recommendations end up here -->
             </div>
         </div>
         

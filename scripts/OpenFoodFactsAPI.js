@@ -1,3 +1,6 @@
+import LocallyStoredSet from "./LocallyStoredSet.js";
+const ALLERGIES = new LocallyStoredSet('saved-allergies').all;
+
 export default class OpenFoodFactsAPI {
 
     static LANGUAGE_PREFERENCE = ['en','nl','fr','de'];
@@ -29,6 +32,34 @@ export default class OpenFoodFactsAPI {
             };
 
             req.open('GET', `${this.#API_URL_BASE}/search?code=${id}`, true);
+            req.send();
+        });
+    }
+
+    /**
+     * Gives a promise that resolves with list of products that are like the given one.
+     * @param {ProductInfo} product 
+     * @returns {Promise<ProductInfo[]>}
+     */
+    static getAlternatives(product) {
+        return new Promise((resolve, reject) => {
+            const req = new XMLHttpRequest();
+
+            req.onreadystatechange = function() {
+                if (this.readyState === 4) {
+                    if (this.status === 200) {
+                        const res = JSON.parse(this.responseText);
+                        resolve(res.products.map(ProductInfo.fromJSONResponse));
+                    }
+                    else reject(`Could not fetch resource: ${this.responseText}`);
+                }
+            }
+
+            let url = `${this.#API_URL_BASE}/search?`;
+            if (ALLERGIES.length > 0) url += 'allergens_tags=' + ALLERGIES.map(a => '-' + a).join(',') + '&';
+            if (product.categories.length > 0) url += 'food_groups_tags=' + product.categories.join(',');
+
+            req.open('GET', url, true);
             req.send();
         });
     }

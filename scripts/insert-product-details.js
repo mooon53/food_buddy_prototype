@@ -1,5 +1,6 @@
 import './lib/JQuery.js';
 import OpenFoodFactsAPI from './OpenFoodFactsAPI.js';
+import ProductEntry from './elements/product-entry.js';
 import USER_SETTINGS, { respectsAllergies, respectsDiet } from './user-settings.js';
 
 const NUTRISCORE_MAPPING = {
@@ -41,6 +42,29 @@ window.addEventListener('DOMContentLoaded', () => {
                 </div>
             `);
         }
+
+        // allergens
+        if (res.allergens.length === 0) $('#allergens').append(`<h2>No known allergens...</h2>`);
+        else for (const a of res.allergens) {
+            $('#allergens').append(`<h2>• ${a.substring(3)}</h2>`);
+        }
+
+        OpenFoodFactsAPI.getAlternatives(res)
+        .then(res => {
+            let count = 0;
+            let i = 0;
+            while (count < 10 && i < res.length) {
+                if (respectsAllergies(res[i])) {
+                    $('#recommendations').append(new ProductEntry(res[i]));
+                    count ++;
+                }
+                i ++;
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            alert('Could not get alternatives');
+        });
 
     })
     .catch(err => {

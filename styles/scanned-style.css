@@ -90,6 +90,19 @@ div.ingredient > * {
     font-weight: 600;
 }
 
+div#recommendations > * {
+    margin: .5em 0 .5em 0;
+}
+
+div#allergens > h2 {
+    font-size: 2em;
+    text-transform: capitalize;
+    font-weight: 600;
+    width:100%;
+    text-align: left;
+    margin:.5em 0 .5em 0;
+}
+
 div.health-indicator {
     height:3em;
     width:3em;
