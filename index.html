@@ -8,8 +8,6 @@
 
     <link rel="stylesheet" href="./styles/shared.css" type="text/css" />
     <link rel="stylesheet" href="./styles/scanning-style.css" type="text/css" />
-
-    <link rel="stylesheet" href="./styles/navbar-style.css" type="text/css" />
     
     <!-- Barcode scanning library -->
     <script src="https://cdn.rawgit.com/serratus/quaggaJS/0420d5e0/dist/quagga.min.js"></script>
@@ -25,7 +23,9 @@
     
     <div id="content" class="center-content">
         <h2 id="scan-status">Searching</h2>
-        <div id="click-box" onclick="gotoScanned()"></div>
+        <div id="click-box" class="center-content" onclick="gotoScanned()">
+            <img id="tap-icon" style="display: none;" src="./images/icons/tap.svg" alt="" id="tap-icon">
+        </div>
     </div>
 
 </body>

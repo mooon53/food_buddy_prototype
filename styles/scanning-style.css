@@ -71,10 +71,6 @@
     box-shadow: 0px 0px 1em .125em var(--green);
 
     transition: 250ms ease-in;
-
-    
-    animation: ping 1s;
-    animation-iteration-count: 999;
 }
 
 #click-box.unsafe {
@@ -82,6 +78,11 @@
     box-shadow: 0px 0px 1em .125em var(--red);
 
     transition: 250ms ease-in;
+}
+
+#tap-icon {
+    width:em;
+    height:4em;
 
     animation: ping 1s;
     animation-iteration-count: 999;
@@ -89,6 +90,6 @@
 
 @keyframes ping {
     0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
+    50% { transform: scale(1.125); }
     100% { transform: scale(1); }
 }

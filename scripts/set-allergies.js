@@ -8,6 +8,7 @@ const POSSIBLE_ALLERGIES = [
     'en:soy',
     'en:milk',
     'en:gluten',
+    'en:nuts'
 ];
 
 POSSIBLE_ALLERGIES.sort((a,b) => a.localeCompare(b));

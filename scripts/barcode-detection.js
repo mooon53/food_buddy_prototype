@@ -85,13 +85,20 @@ function setClickBoxCode(code, safe) {
 
         $('#scan-status').addClass('safe');
         $('#scan-status').text('Safe');
+
+        $('#tap-icon').fadeIn('fast');
     }
     else if (safe === false) {
         $('#click-box').addClass('unsafe');
-        $('#content').addClass('unsafe');
+        $('#content').addClass(250);
 
         $('#scan-status').addClass('unsafe');
         $('#scan-status').text('Warning');
+
+        $('#tap-icon').fadeIn(250);
+    }
+    else {
+        $('#tap-icon').fadeOut(250);
     }
 
     if (code) $('#click-box').attr('code', code);
