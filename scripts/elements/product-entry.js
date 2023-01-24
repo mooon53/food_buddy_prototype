@@ -19,7 +19,7 @@ export default class ProductEntry extends HTMLElement {
 
         this.innerHTML = `
             <img src="${product.imageURL}" alt="${product.name}">
-            <h2><a href="/scanned.html?code=${product.id}">${product.name}</a></h2>
+            <h2 onclick="window.location.href='/scanned.html?code=${product.id}'">${product.name}</h2>
         `;
 
         this.classList.add(respectsAllergies(product) ? 'safe' : 'unsafe');

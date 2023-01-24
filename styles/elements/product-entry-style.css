@@ -39,6 +39,7 @@ product-entry > h2 {
     font-size: 2em;
     font-family: Inter;
     font-style: italic;
+    text-align: right;
 }
 
 product-entry > h2 > a {

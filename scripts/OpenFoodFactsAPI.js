@@ -110,12 +110,20 @@ export class ProductInfo {
     }
 
     static fromJSONResponse(res) {
+        console.log(res);
+        let name = undefined;
+        for (const lang of OpenFoodFactsAPI.LANGUAGE_PREFERENCE) {
+            const langName = res['product_name_'+lang];
+            if (langName !== undefined && langName.length > 0) {
+                name = langName;
+                break;
+            }
+        }
+        name = name ?? 'Unknown Product';
+
         return new ProductInfo(
             res.code,
-            OpenFoodFactsAPI.LANGUAGE_PREFERENCE.reduce( // get name in most preferred language
-                (val, lang) => val ?? res['product_name_'+lang],
-                undefined
-            ) ?? 'Unknown product',
+            name,
             res.brands ?? '',
             res.quantity ?? '??? grams',
             res.image_front_url ?? '/images.icons/account.svg',

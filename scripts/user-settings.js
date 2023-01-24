@@ -18,7 +18,6 @@ Object.seal(USER_SETTINGS);
 export default USER_SETTINGS;
 
 export function respectsAllergies(product) {
-    console.log(product);
     return product.allergens.every(a => !USER_SETTINGS.allergies.includes(a));
 }
 
