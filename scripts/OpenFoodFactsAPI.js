@@ -57,7 +57,9 @@ export default class OpenFoodFactsAPI {
 
             let url = `${this.#API_URL_BASE}/search?`;
             if (ALLERGIES.length > 0) url += 'allergens_tags=' + ALLERGIES.map(a => '-' + a).join(',') + '&';
-            if (product.categories.length > 0) url += 'food_groups_tags=' + product.categories.join(',');
+            if (product.categories.length > 0) url += 'food_groups_tags=' + product.categories.join(',') + '&';
+            if (product.countries.length > 0) url += 'countries_tags=' + product.countries.join('|') + '&'; // find matching country
+            if (product.stores.length > 0) url += 'stores_tags=' + product.countries.join('|') + '&'; // find matching store
 
             req.open('GET', url, true);
             req.send();
@@ -88,11 +90,15 @@ export class ProductInfo {
     #nutritionalInfo;
     /** @returns {NutritionalInfo} */
     get nutritionalInfo() { return this.#nutritionalInfo; }
+    #countries;
+    get countries() { return this.#countries; }
+    #stores;
+    get stores() { return this.#stores; }
 
     get isVegan() { return this.ingredients.every(i => i.isVegan); }
     get isVegetarian() { return this.ingredients.every(i => i.isVegetarian); }
 
-    constructor(id, name, brands, quantity, imageURL, categories, allergens, ingredients, nutritionalInfo) {
+    constructor(id, name, brands, quantity, imageURL, categories, allergens, ingredients, nutritionalInfo, countries, stores) {
         this.#id = id;
         this.#brands = brands;
         this.#name = name;
@@ -101,6 +107,8 @@ export class ProductInfo {
         this.#categories = categories;
         this.#allergens = allergens;
         this.#ingredients = ingredients;
+        this.#countries = countries;
+        this.#stores = stores;
 
         this.#ingredients.sort((a,b) => b.percentage - a.percentage); // sort ingredient by percentage (high -> low)
         Object.freeze(this.#ingredients);
@@ -130,7 +138,9 @@ export class ProductInfo {
             res.food_groups_tags ?? [],
             res.allergens_tags ?? [],
             (res.ingredients ?? [ProductIngredient.UNKNOWN_INGREDIENT]).map(ProductIngredient.fromJSONResponse),
-            NutritionalInfo.fromJSONResponse(res)
+            NutritionalInfo.fromJSONResponse(res),
+            res.countries_tags,
+            res.stores_tags
         );
     }
 
