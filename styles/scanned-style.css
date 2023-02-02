@@ -56,6 +56,7 @@ div.section > .header {
 
 #general-info > * {
     text-align: center;
+    text-transform: capitalize;
 }
 
 #product-weight {
@@ -88,6 +89,7 @@ div.ingredient > * {
     margin:0;
     font-size: 1.75em;
     font-weight: 600;
+    text-transform: capitalize;
 }
 
 div#recommendations > * {

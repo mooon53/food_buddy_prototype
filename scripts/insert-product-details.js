@@ -1,7 +1,7 @@
 import './lib/JQuery.js';
 import OpenFoodFactsAPI from './OpenFoodFactsAPI.js';
 import ProductEntry from './elements/product-entry.js';
-import USER_SETTINGS, { respectsAllergies, respectsDiet } from './user-settings.js';
+import { respectsAllergies } from './user-settings.js';
 
 const NUTRISCORE_MAPPING = {
     '?': 'unknown',
@@ -16,25 +16,25 @@ const PRODUCT_ID = new URLSearchParams(window.location.search).get('code');
 
 window.addEventListener('DOMContentLoaded', () => {
     OpenFoodFactsAPI.search(PRODUCT_ID ?? '8718906821934')
-    .then(res => { // insert product details
-        $(document.body).addClass(respectsAllergies(res) ? 'safe' : 'unsafe');
+    .then(product => { // insert product details
+        $(document.body).addClass(respectsAllergies(product) ? 'safe' : 'unsafe');
 
         // general info
-        $('#product-name').text(res.name.includes(res.brands) ? res.name : `${res.brands} ${res.name}`);
-        $('#product-weight').text(`(${res.quantity})`);
+        $('#product-name').text(product.name.includes(product.brands) ? product.name : `${product.brands} ${product.name}`);
+        $('#product-weight').text(`(${product.quantity})`);
 
         // nutri-score
-        $('#product-nutri-score > h2').text(res.nutritionalInfo.nutriscore);
-        $('#product-nutri-score').addClass(NUTRISCORE_MAPPING[res.nutritionalInfo.nutriscore]);
+        $('#product-nutri-score > h2').text(product.nutritionalInfo.nutriscore);
+        $('#product-nutri-score').addClass(NUTRISCORE_MAPPING[product.nutritionalInfo.nutriscore]);
 
         // nutritional info
-        $('#product-sugar-content').addClass(res.nutritionalInfo.sugar);
-        $('#product-fat-content').addClass(res.nutritionalInfo.fat);
-        $('#product-saturated-fat-content').addClass(res.nutritionalInfo.saturatedFat);
-        $('#product-salt-content').addClass(res.nutritionalInfo.salt);
+        $('#product-sugar-content').addClass(product.nutritionalInfo.sugar);
+        $('#product-fat-content').addClass(product.nutritionalInfo.fat);
+        $('#product-saturated-fat-content').addClass(product.nutritionalInfo.saturatedFat);
+        $('#product-salt-content').addClass(product.nutritionalInfo.salt);
 
         // ingredients
-        for (const ingredient of res.ingredients) {
+        for (const ingredient of product.ingredients) {
             $('#ingredients').append(`
                 <div class="ingredient centered-columns">
                     <h2>• ${ingredient.name}</h2>
@@ -44,22 +44,26 @@ window.addEventListener('DOMContentLoaded', () => {
         }
 
         // allergens
-        if (res.allergens.length === 0) $('#allergens').append(`<h2>No known allergens...</h2>`);
-        else for (const a of res.allergens) {
+        if (product.allergens.length === 0) $('#allergens').append(`<h2>No known allergens...</h2>`);
+        else for (const a of product.allergens) {
             $('#allergens').append(`<h2>• ${a.substring(3)}</h2>`);
         }
 
-        OpenFoodFactsAPI.getAlternatives(res)
-        .then(res => {
+        OpenFoodFactsAPI.getAlternatives(product)
+        .then(recommendations => {
+            recommendations = recommendations.filter(r => r.id !== product.id);
+            recommendations.sort((a,b) => b.getSimilarityScore(product)-a.getSimilarityScore(product));
             let count = 0;
             let i = 0;
-            while (count < 10 && i < res.length) {
-                if (respectsAllergies(res[i])) {
-                    $('#recommendations').append(new ProductEntry(res[i]));
+            while (count < 10 && i < recommendations.length) {
+                if (respectsAllergies(recommendations[i])) {
+                    $('#recommendations').append(new ProductEntry(recommendations[i]));
                     count ++;
                 }
                 i ++;
             }
+
+            if (i === 0) $('#recommendations').append(`<h2>No recommendations</h2>`);
         })
         .catch(err => {
             console.log(err);

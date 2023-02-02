@@ -25,7 +25,7 @@ export default class OpenFoodFactsAPI {
                     if (this.status === 200) { // got OK response
                         const res = JSON.parse(this.responseText);
                         if (res.count === 0) reject('No results found');
-                        else resolve(ProductInfo.fromJSONResponse(res.products[0]));
+                        else resolve(new ProductInfo(res.products[0]));
                     }
                     else reject(`Could not fetch resource: ${this.responseText}`);
                 }
@@ -49,7 +49,7 @@ export default class OpenFoodFactsAPI {
                 if (this.readyState === 4) {
                     if (this.status === 200) {
                         const res = JSON.parse(this.responseText);
-                        resolve(res.products.map(ProductInfo.fromJSONResponse));
+                        resolve(res.products.map(p => new ProductInfo(p)));
                     }
                     else reject(`Could not fetch resource: ${this.responseText}`);
                 }
@@ -57,9 +57,11 @@ export default class OpenFoodFactsAPI {
 
             let url = `${this.#API_URL_BASE}/search?`;
             if (ALLERGIES.length > 0) url += 'allergens_tags=' + ALLERGIES.map(a => '-' + a).join(',') + '&';
-            if (product.categories.length > 0) url += 'food_groups_tags=' + product.categories.join(',') + '&';
+            if (product.foodGroups.length > 0) url += 'food_groups_tags=' + product.foodGroups.join(',') + '&';
             if (product.countries.length > 0) url += 'countries_tags=' + product.countries.join('|') + '&'; // find matching country
-            if (product.stores.length > 0) url += 'stores_tags=' + product.countries.join('|') + '&'; // find matching store
+            if (product.stores.length > 0) url += 'stores_tags=' + product.stores.join('|') + '&'; // find matching store
+            if (product.type) url += 'compared_to_category=' + product.type + '&';
+            console.log(url);
 
             req.open('GET', url, true);
             req.send();
@@ -70,123 +72,110 @@ export default class OpenFoodFactsAPI {
 
 export class ProductInfo {
     
-    #id;
-    get id() { return this.#id; }
-    #name;
-    get name() { return this.#name; }
-    #brands;
-    get brands() { return this.#brands; }
-    #quantity;
-    get quantity() { return this.#quantity; }
-    #imageURL;
-    get imageURL() { return this.#imageURL }
-    #categories;
-    get categories() { return this.#categories; }
-    #allergens;
-    get allergens() { return this.#allergens; }
-    #ingredients;
-    /** @returns {Array<ProductIngredient>} */
-    get ingredients() { return this.#ingredients; }
-    #nutritionalInfo;
-    /** @returns {NutritionalInfo} */
-    get nutritionalInfo() { return this.#nutritionalInfo; }
-    #countries;
-    get countries() { return this.#countries; }
-    #stores;
-    get stores() { return this.#stores; }
+    static FIELD_RESPONSE_MAPPING = { // describes functions to get certain information out of a response object
+        id: res => res.code,
+        name: res => {
+            let name = undefined;
+            for (const lang of OpenFoodFactsAPI.LANGUAGE_PREFERENCE) {
+                const langName = res['product_name_'+lang];
+                if (langName !== undefined && langName.length > 0) {
+                    name = langName;
+                    break;
+                }
+            }
+            return name ?? (res.product_name ? res.product_name : 'Unknown Product');
+        },
+        brands: res => res.brands ?? [],
+        brandTags: res => res.brands_tags ?? [],
+        quantity: res => res.quantity ? res.quantity : '??? grams',
+        imageURL: res => res.image_front_url ?? '/images/icons/question-mark.svg',
+        foodGroups: res => res.food_groups_tags ?? [],
+        categories: res => res.categories_hierarchy ?? [],
+        allergens: res => res.allergens_tags ?? [],
+        ingredients: res => {
+            if (res.ingredients) return res.ingredients.map(i => new ProductIngredient(i)).sort((a,b)=>b.percentage-a.percentage);
+            else return [ProductIngredient.UNKNOWN_INGREDIENT];
+        },
+        nutritionalInfo: res => new NutritionalInfo(res),
+        countries: res => res.countries_tags ?? [],
+        stores: res => res.stores_tags ?? [],
+        keywords: res => res._keywords ?? [],
+        type: res => res.compared_to_category ? res.compared_to_category : undefined,
+    }
+
+    id;
+    name;
+    brands;
+    brandTags;
+    quantity;
+    imageURL;
+    foodGroups;
+    categories;
+    allergens;
+    ingredients;
+    nutritionalInfo;
+    countries;
+    stores;
+    keywords;
+    type;
 
     get isVegan() { return this.ingredients.every(i => i.isVegan); }
     get isVegetarian() { return this.ingredients.every(i => i.isVegetarian); }
 
-    constructor(id, name, brands, quantity, imageURL, categories, allergens, ingredients, nutritionalInfo, countries, stores) {
-        this.#id = id;
-        this.#brands = brands;
-        this.#name = name;
-        this.#quantity = quantity;
-        this.#imageURL = imageURL
-        this.#categories = categories;
-        this.#allergens = allergens;
-        this.#ingredients = ingredients;
-        this.#countries = countries;
-        this.#stores = stores;
+    constructor(response) {
+        console.log(response);
+        for (const fieldName in ProductInfo.FIELD_RESPONSE_MAPPING) {
+            this[fieldName] = ProductInfo.FIELD_RESPONSE_MAPPING[fieldName](response);
+        }
 
-        this.#ingredients.sort((a,b) => b.percentage - a.percentage); // sort ingredient by percentage (high -> low)
-        Object.freeze(this.#ingredients);
-        
-        this.#nutritionalInfo = nutritionalInfo;
-        Object.freeze(this.#nutritionalInfo);
+        Object.freeze(this);
     }
 
-    static fromJSONResponse(res) {
-        console.log(res);
-        let name = undefined;
-        for (const lang of OpenFoodFactsAPI.LANGUAGE_PREFERENCE) {
-            const langName = res['product_name_'+lang];
-            if (langName !== undefined && langName.length > 0) {
-                name = langName;
-                break;
-            }
-        }
-        name = name ?? 'Unknown Product';
+    /**
+     * A numerical score that indicated how similar two products are.
+     * @param {ProductInfo} product 
+     * @returns {number} similarity score
+     */
+    getSimilarityScore(product) {
+        let out = 0;
 
-        return new ProductInfo(
-            res.code,
-            name,
-            res.brands ?? '',
-            res.quantity ?? '??? grams',
-            res.image_front_url ?? '/images.icons/account.svg',
-            res.food_groups_tags ?? [],
-            res.allergens_tags ?? [],
-            (res.ingredients ?? [ProductIngredient.UNKNOWN_INGREDIENT]).map(ProductIngredient.fromJSONResponse),
-            NutritionalInfo.fromJSONResponse(res),
-            res.countries_tags,
-            res.stores_tags
-        );
+        product.brandTags.forEach(k => out += this.brandTags.includes(k) ? 3 : 0); // similar brands
+
+        product.foodGroups.forEach(k => out += this.foodGroups.includes(k) ? 2 : 0); // similar food groups
+
+        product.keywords.forEach(k => out += this.keywords.includes(k) ? 1 : 0); // similar keywords
+        
+        product.categories.forEach(k => out += this.categories.includes(k) ? .5 : 0); // similar categories
+
+        return out;
     }
 
 }
 
 export class ProductIngredient {
 
-    static get UNKNOWN_INGREDIENT() {
-        return {
-            id: 'unknown',
-            name: 'Unknown',
-            percent: 100,
-            vegan:false,
-            vegetarian: false
-        };
+    static UNKNOWN_INGREDIENT = {name:'Unknown', percentage:100, vegan:false, vegetarian:false};
+
+    static FIELD_RESPONSE_MAPPING = {
+        id: res => res.id,
+        name: res => res.id.substring(res.id.indexOf(':')+1).replaceAll('-', ' '),
+        percentage: res => res.percent ?? res.percent_estimate ?? res.percent_max ?? res.percent_min ?? 0,
+        isVegan: res => res.vegan === 'yes',
+        isVegetarian: res => res.vegetarian === 'yes'
     }
 
-    #id;
-    get id() { return this.#id; }
-    #name;
-    get name() { return this.#name; }
-    #percentage;
-    get percentage() { return this.#percentage; }
-    #isVegan;
-    get isVegan() { return this.#isVegan; }
-    #isVegetarian;
-    get isVegetarian() { return this.#isVegetarian; }
+    id;
+    name;
+    percentage;
+    isVegan;
+    isVegetarian;
 
-    constructor(id, name, percentage, isVegan, isVegetarian) {
-        this.#id = id;
-        this.#name = name;
-        this.#percentage = percentage;
-        this.#isVegan = isVegan;
-        this.#isVegetarian = isVegetarian;
-    }
+    constructor(response) {
+        for (const fieldName in ProductIngredient.FIELD_RESPONSE_MAPPING) {
+            this[fieldName] = ProductIngredient.FIELD_RESPONSE_MAPPING[fieldName](response);
+        }
 
-    static fromJSONResponse(res) {
-        const name = res.id.substring(res.id.indexOf(':')+1).replaceAll('-', ' ');
-
-        return new ProductIngredient(
-            res.id,
-            name.charAt(0).toLocaleUpperCase() + name.substring(1),
-            res.percent ?? res.percent_estimate ?? res.percent_max ?? res.percent_min ?? 0,
-            res.vegan === 'yes',
-            res.vegetarian === "yes"
-        );
+        Object.freeze(this);
     }
 
 }
@@ -194,33 +183,26 @@ export class ProductIngredient {
 
 export class NutritionalInfo {
 
-    #nutriscore;
-    get nutriscore() { return this.#nutriscore; }
-    #fat;
-    get fat() { return this.#fat; }
-    #salt;
-    get salt() { return this.#salt; }
-    #saturatedFat;
-    get saturatedFat() { return this.#saturatedFat; }
-    #sugar;
-    get sugar() { return this.#sugar; }
-
-    constructor(nutriscore, fat, salt, saturatedFat, sugar) {
-        this.#nutriscore = nutriscore;
-        this.#fat = fat;
-        this.#salt = salt;
-        this.#saturatedFat = saturatedFat;
-        this.#sugar = sugar;
+    static FIELD_RESPONSE_MAPPING = {
+        nutriscore: res => (res.nutriscore_grade ?? '?').toLocaleUpperCase(),
+        fat: res => res.nutrient_levels.fat ?? 'unknown',
+        salt: res => res.nutrient_levels.salt ?? 'unknown',
+        saturatedFat: res => res.nutrient_levels['saturated-fat']  ?? 'unknown',
+        sugar: res => res.nutrient_levels.sugars ?? 'unknown'
     }
+    
+    nutriscore;
+    fat;
+    salt;
+    saturatedFat;
+    sugar;
 
-    static fromJSONResponse(res) {
-        return new NutritionalInfo(
-            (res.nutriscore_grade ?? '?').toLocaleUpperCase(),
-            res.nutrient_levels.fat ?? 'unknown',
-            res.nutrient_levels.salt ?? 'unknown',
-            res.nutrient_levels['saturated-fat']  ?? 'unknown',
-            res.nutrient_levels.sugars ?? 'unknown'
-        );
+    constructor(response) {
+        for (const fieldName in NutritionalInfo.FIELD_RESPONSE_MAPPING) {
+            this[fieldName] = NutritionalInfo.FIELD_RESPONSE_MAPPING[fieldName](response);
+        }
+
+        Object.freeze(this);
     }
 
 }
