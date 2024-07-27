@@ -1,1 +1,1 @@
-# HCI - HiFi Prototype
+# HCI - HiFi Prototype : FoodBuddy
